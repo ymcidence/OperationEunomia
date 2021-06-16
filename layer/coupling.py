@@ -33,7 +33,7 @@ class CouplingLayer(tf.keras.layers.Layer):
 
             h = self.net(x_1)
             shift = h[:, 0::2]
-            scale = tf.nn.sigmoid(h[:, :, :, 1::2] + 2.) + 1e-8
+            scale = tf.nn.sigmoid(h[:, 1::2] + 2.) + 1e-8
             x_2 /= scale
             x_2 -= shift
 

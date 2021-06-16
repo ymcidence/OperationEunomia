@@ -9,18 +9,18 @@ from layer.coupling import CouplingLayer
 class ToyModel(tf.keras.Model):
     def __init__(self, feat_size, layer=4, k=10, **kwargs):
         super().__init__(**kwargs)
-        couplings = [CouplingLayer(feat_size, feat_size * 2) for _ in range(layer - 1)]
-        couplings += [CouplingLayer(feat_size, feat_size * 2, tf.identity)]
+        couplings = [CouplingLayer(feat_size, feat_size * 2) for _ in range(layer)]
+        # couplings += [CouplingLayer(feat_size, feat_size * 2, tf.identity)]
         self.inn = couplings
         self.feat_size = feat_size
         self.k = k
         initializer = tf.keras.initializers.GlorotUniform()
-        self.prior = tf.Variable([k, feat_size], trainable=True, initial_value=initializer(shape=[k, feat_size]))
+        self.prior = tf.Variable(trainable=True, initial_value=initializer(shape=[k, feat_size]))
 
     def call(self, inputs, training=True, mask=None, step=-1):
-        batch_size = tf.shape(inputs)[0]
+        # batch_size = tf.shape(inputs)[0]
         _x = inputs
-        _jac = tf.zeros([batch_size])
+        _jac = 0
 
         for l in self.inn:
             _x, _j = l(_x, training=True, forward=True)  # [N D], [N]
@@ -72,4 +72,7 @@ class ToyModel(tf.keras.Model):
             _c = i % 3 * size
             rslt[_r:(_r + size), _c:(_c + size)] = img[i, :, :]
 
-        return rslt
+        return rslt[np.newaxis, :, :, np.newaxis]
+
+
+
