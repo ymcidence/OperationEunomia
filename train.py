@@ -5,7 +5,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from meta import ROOT_PATH
 from time import gmtime, strftime
-from model.toy_model import ToyModel as Model
+from model.vqvae import ToyModel as Model
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
